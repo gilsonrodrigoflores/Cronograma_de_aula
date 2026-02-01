@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário de Classe - Prof. Gilson</title>
+    <style>
+        /* Estilo moderno e limpo para celular */
+        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f4f9; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        
+        h2 { color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        
+        /* Cards das Aulas */
+        .card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid var(--accent); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; }
+        .hora { font-weight: bold; color: #555; font-size: 0.9em; }
+        .turma { font-size: 1.4em; font-weight: bold; color: var(--primary); }
+        .info-sala { margin-top: 10px; font-size: 0.9em; color: #666; background: #eee; padding: 8px; border-radius: 5px; }
+        .bad-projector { color: #c0392b; font-weight: bold; }
+        .auxiliar { color: #27ae60; font-weight: bold; }
+
+        /* Botão de Registrar */
+        .btn-registrar { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; }
+        
+        /* Modal (Janela de Registro) */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; }
+        input, textarea { width: 100%; margin-bottom: 10px; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        .btn-salvar { background: var(--accent); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-size: 1.1em; cursor: pointer; }
+        .close { float: right; cursor: pointer; font-size: 1.5em; }
+
+        /* Loading */
+        #loading { text-align: center; margin-top: 50px; font-style: italic; color: #666; }
+    </style>
+</head>
+<body>
+
+    <div id="main-view">
+        <h2>📅 Aulas de Hoje</h2>
+        <div id="loading">Carregando cronograma...</div>
+        <div id="lista-aulas"></div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <h3>📝 Registrar Aula</h3>
+            <p id="modal-turma-info" style="color: gray;"></p>
+            
+            <form id="form-registro">
+                <label>O que foi feito hoje?</label>
+                <textarea id="conteudo" rows="3" placeholder="Ex: Introdução à Sociologia..."></textarea>
+                
+                <label>Para a próxima aula:</label>
+                <textarea id="proxima" rows="2" placeholder="Ex: Trazer atividade impressa..."></textarea>
+                
+                <button type="button" class="btn-salvar" onclick="salvarRegistro()">💾 Salvar no Diário</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // *** IMPORTANTE: COLE SUA URL DO APPS SCRIPT AQUI ***
+        const API_URL = "https://script.google.com/macros/s/AKfycbz6IJyubdqJC_OPPD3NMGXZwN5K1QgMpAoAecmdTor5TL5AsNqS76kHgFzPw4eDBHHr/exec";
+
+        let aulaSelecionada = "";
+
+        // Ao carregar a página
+        window.onload = function() {
+            carregarAulas();
+        };
+
+        function carregarAulas() {
+            fetch(API_URL + "?action=getHorario")
+            .then(response => response.json())
+            .then(data => {
+                const lista = document.getElementById('lista-aulas');
+                document.getElementById('loading').style.display = 'none';
+                lista.innerHTML = "";
+
+                if(data.length === 0) {
+                    lista.innerHTML = "<p>Nenhuma aula encontrada para hoje.</p>";
+                    return;
+                }
+
+                data.forEach(aula => {
+                    // Lógica para destacar problemas no projetor
+                    let projetorClass = aula.projetor.toLowerCase().includes("ruim") || aula.projetor.toLowerCase().includes("alta") ? "bad-projector" : "";
+                    
+                    // Se tiver auxiliar, mostra destaque
+                    let auxiliarInfo = aula.auxiliar ? `<br>🤝 <span class="auxiliar">Auxiliar: ${aula.auxiliar}</span>` : "";
+
+                    const card = `
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="hora">⏰ ${aula.inicio} - ${aula.fim}</span>
+                                <span class="turma">Turma ${aula.turma}</span>
+                            </div>
+                            <div class="info-sala">
+                                📍 Sala: <b>${aula.sala}</b><br>
+                                📽️ Projetor: <span class="${projetorClass}">${aula.projetor}</span>
+                                ${auxiliarInfo}
+                            </div>
+                            <button class="btn-registrar" onclick="abrirModal('${aula.turma}')">✍️ Registrar Aula</button>
+                        </div>
+                    `;
+                    lista.innerHTML += card;
+                });
+            })
+            .catch(error => {
+                document.getElementById('loading').innerHTML = "Erro ao carregar. Verifique a internet.";
+                console.error(error);
+            });
+        }
+
+        function abrirModal(turma) {
+            aulaSelecionada = turma;
+            document.getElementById('modal-turma-info').innerText = "Registrando para a Turma " + turma;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function salvarRegistro() {
+            const btn = document.querySelector('.btn-salvar');
+            btn.innerText = "Salvando...";
+            btn.disabled = true;
+
+            const dados = {
+                action: "salvarAula",
+                turma: aulaSelecionada,
+                conteudo: document.getElementById('conteudo').value,
+                proxima: document.getElementById('proxima').value
+            };
+
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify(dados)
+            })
+            .then(response => response.json())
+            .then(json => {
+                alert("Registro salvo com sucesso!");
+                fecharModal();
+                // Limpa o formulário
+                document.getElementById('conteudo').value = "";
+                document.getElementById('proxima').value = "";
+                btn.innerText = "💾 Salvar no Diário";
+                btn.disabled = false;
+            })
+            .catch(err => {
+                alert("Erro ao salvar.");
+                btn.innerText = "💾 Salvar no Diário";
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
