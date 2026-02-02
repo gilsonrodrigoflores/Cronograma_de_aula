@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planner Docente V3</title>
+    <title>Planner Docente V4</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
@@ -14,30 +14,25 @@
             --light-green: #2ecc71;
             --bg-color: #f0f5f1;
             --white: #ffffff;
+            --danger: #c0392b;
+            --auxiliar: #d35400;
         }
         
         body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; padding-bottom: 80px; color: #2c3e50; }
         
-        /* Header Fixo */
         header {
             background: linear-gradient(135deg, var(--dark-green), var(--mid-green));
-            color: white; padding: 15px;
-            position: sticky; top: 0; z-index: 100;
+            color: white; padding: 15px; position: sticky; top: 0; z-index: 100;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         
-        /* Navegação de Data */
         .date-nav {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255,255,255,0.15); border-radius: 10px;
-            padding: 8px; margin-top: 10px;
+            background: rgba(255,255,255,0.15); border-radius: 10px; padding: 8px; margin-top: 10px;
         }
-        .nav-btn {
-            background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 0 15px;
-        }
+        .nav-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 0 15px; }
         .current-date-display { font-weight: 600; font-size: 0.95rem; text-transform: capitalize; }
 
-        /* Tabs */
         .tabs { display: flex; margin-top: 10px; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px; }
         .tab { flex: 1; text-align: center; padding: 8px; color: rgba(255,255,255,0.7); cursor: pointer; border-radius: 16px; font-size: 0.85rem; }
         .tab.active { background: white; color: var(--dark-green); font-weight: bold; }
@@ -45,56 +40,45 @@
         .container { padding: 15px; display: none; }
         .container.active { display: block; }
         
-        /* Card */
-        .card {
-            background: white; border-radius: 12px; margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden;
-        }
-        .card-header {
-            background: #fcfcfc; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0;
-        }
+        .card { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; }
+        .card-header { background: #fcfcfc; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; }
         .turma-badge { background: var(--dark-green); color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; }
         
         .card-body { padding: 15px; }
         
-        /* Status Boxes */
+        /* INFRAESTRUTURA (Novidade V4) */
+        .infra-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; font-size: 0.8rem; }
+        .tag { padding: 4px 8px; border-radius: 4px; background: #eee; color: #555; display: flex; align-items: center; gap: 5px; }
+        .tag.sala { background: #e8f6f3; color: var(--mid-green); font-weight: bold; }
+        .tag.projetor-ruim { background: #fadbd8; color: var(--danger); border: 1px solid var(--danger); }
+        .tag.auxiliar { background: #fdebd0; color: var(--auxiliar); border: 1px solid var(--auxiliar); }
+
         .status-box { padding: 10px; border-radius: 6px; font-size: 0.85rem; margin-top: 8px; }
         .box-memory { background: #fff3cd; color: #856404; border-left: 3px solid #ffeeba; }
         .box-plan { background: #d4edda; color: #155724; border-left: 3px solid #c3e6cb; }
         .box-done { background: #cce5ff; color: #004085; border-left: 3px solid #b8daff; }
 
-        .btn-action {
-            width: 100%; padding: 12px; border: none; background: white; color: var(--mid-green);
-            font-weight: bold; border-top: 1px solid #eee; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        .btn-action { width: 100%; padding: 12px; border: none; background: white; color: var(--mid-green); font-weight: bold; border-top: 1px solid #eee; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .week-day-header { background: var(--mid-green); color: white; padding: 8px 15px; border-radius: 6px; margin-top: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
 
-        /* Planejamento Semanal */
-        .week-day-header {
-            background: var(--mid-green); color: white; padding: 8px 15px; border-radius: 6px;
-            margin-top: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;
-        }
-
-        /* Modal */
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; width: 85%; max-width: 400px; padding: 25px; border-radius: 15px; }
         textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; }
         .btn-save { background: var(--mid-green); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 1rem; }
-
     </style>
 </head>
 <body>
 
     <header>
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h1 style="margin:0; font-size:1.1rem;"><i class="fas fa-chalkboard-teacher"></i> Planner</h1>
+            <h1 style="margin:0; font-size:1.1rem;"><i class="fas fa-chalkboard-teacher"></i> Planner V4</h1>
         </div>
-        
         <div class="date-nav">
             <button class="nav-btn" onclick="navegar(-1)"><i class="fas fa-chevron-left"></i></button>
-            <span id="display-data" class="current-date-display">Carregando...</span>
+            <span id="display-data" class="current-date-display">...</span>
             <button class="nav-btn" onclick="navegar(1)"><i class="fas fa-chevron-right"></i></button>
         </div>
-
         <div class="tabs">
             <div class="tab active" onclick="mudarModo('dia')">Diário (Dia)</div>
             <div class="tab" onclick="mudarModo('semana')">Planejar (Semana)</div>
@@ -113,34 +97,27 @@
         <div class="modal-content">
             <h3 style="margin-top:0; color:var(--dark-green)"><span id="modal-titulo">Registro</span></h3>
             <p id="modal-subtitulo" style="font-size:0.85rem; color:#666; margin-bottom:15px;"></p>
-            
-            <label style="font-size:0.9rem; font-weight:bold;">Conteúdo / Atividade</label>
+            <label>Conteúdo / Atividade</label>
             <textarea id="input-conteudo" rows="4"></textarea>
-            
-            <label style="font-size:0.9rem; font-weight:bold;">Obs / Próxima Aula</label>
+            <label>Obs / Próxima Aula</label>
             <textarea id="input-obs" rows="2"></textarea>
-            
-            <input type="hidden" id="input-data">
-            <input type="hidden" id="input-turma">
-            <input type="hidden" id="input-tipo">
-
+            <input type="hidden" id="input-data"><input type="hidden" id="input-turma"><input type="hidden" id="input-tipo">
             <button class="btn-save" onclick="salvarDados()">Salvar Registro</button>
             <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; width:100%; padding:10px; color:#666; margin-top:5px;">Cancelar</button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbziX_CzN72CKewOOUxEanfjAmfWIeo8WJ7FZOqjMbLaYIuYw8-K8xPiUNg8IhVuClGG/exec"; 
+        const API_URL = "SUA_NOVA_URL_AQUI"; 
 
-        let modoAtual = 'dia'; // 'dia' ou 'semana'
-        let offsetDia = 0; // 0 = Hoje
-        let offsetSemana = 0; // 0 = Semana Atual
+        let modoAtual = 'dia';
+        let offsetDia = 0;
+        let offsetSemana = 0;
 
         function mudarModo(novoModo) {
             modoAtual = novoModo;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
-            
             if(modoAtual === 'dia') {
                 document.querySelectorAll('.tab')[0].classList.add('active');
                 document.getElementById('view-dia').classList.add('active');
@@ -153,51 +130,56 @@
         }
 
         function navegar(direcao) {
-            if(modoAtual === 'dia') {
-                offsetDia += direcao; // Volta ou avança 1 dia
-                carregarDia();
-            } else {
-                offsetSemana += (direcao * 7); // Volta ou avança 7 dias
-                carregarSemana();
+            if(modoAtual === 'dia') { offsetDia += direcao; carregarDia(); } 
+            else { offsetSemana += (direcao * 7); carregarSemana(); }
+        }
+
+        function renderizarTags(aula) {
+            let tags = `<div class="tag sala"><i class="fas fa-door-open"></i> Sala ${aula.sala}</div>`;
+            
+            // Lógica Projetor
+            if(aula.projetor) {
+                let projClass = (aula.projetor.toLowerCase().includes("ruim") || aula.projetor.toLowerCase().includes("alta")) ? "projetor-ruim" : "";
+                let icon = projClass ? "exclamation-triangle" : "video";
+                tags += `<div class="tag ${projClass}"><i class="fas fa-${icon}"></i> ${aula.projetor}</div>`;
             }
+
+            // Lógica Auxiliar
+            if(aula.auxiliar) {
+                tags += `<div class="tag auxiliar"><i class="fas fa-hands-helping"></i> ${aula.auxiliar}</div>`;
+            }
+            return `<div class="infra-tags">${tags}</div>`;
         }
 
         function carregarDia() {
-            document.getElementById('display-data').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Buscando...`;
-            document.getElementById('lista-dia').innerHTML = ""; // Limpa visualmente
+            document.getElementById('display-data').innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+            document.getElementById('lista-dia').innerHTML = ""; 
 
             fetch(`${API_URL}?action=getDia&offset=${offsetDia}`)
             .then(res => res.json())
             .then(json => {
-                document.getElementById('display-data').innerText = json.data; // Mostra data no topo
+                document.getElementById('display-data').innerText = json.data;
                 const lista = document.getElementById('lista-dia');
                 lista.innerHTML = "";
 
-                if(json.aulas.length === 0) lista.innerHTML = "<p style='text-align:center; margin-top:20px; color:#999'>Sem aulas neste dia.</p>";
+                if(json.aulas.length === 0) lista.innerHTML = "<p style='text-align:center; margin-top:20px; color:#999'>Sem aulas.</p>";
 
                 json.aulas.forEach(aula => {
-                    // Lógica visual dos boxes
                     let boxHTML = "";
+                    if(aula.tipoHoje === "REALIZADO") boxHTML += `<div class="status-box box-done"><i class="fas fa-check"></i> <b>Feito:</b> ${aula.conteudoHoje}</div>`;
+                    else if(aula.tipoHoje === "PLANEJADO") boxHTML += `<div class="status-box box-plan"><i class="fas fa-thumbtack"></i> <b>Planejado:</b> ${aula.conteudoHoje}</div>`;
                     
-                    // Se já foi REALIZADO
-                    if(aula.tipoHoje === "REALIZADO") {
-                        boxHTML += `<div class="status-box box-done"><i class="fas fa-check"></i> <b>Feito:</b> ${aula.conteudoHoje}</div>`;
-                    } 
-                    // Se foi PLANEJADO
-                    else if(aula.tipoHoje === "PLANEJADO") {
-                        boxHTML += `<div class="status-box box-plan"><i class="fas fa-thumbtack"></i> <b>Planejado:</b> ${aula.conteudoHoje}</div>`;
-                    }
-
-                    // Memória (sempre mostra o histórico anterior)
-                    boxHTML += `<div class="status-box box-memory"><i class="fas fa-history"></i> ${aula.memoria}</div>`;
+                    // Mostra histórico apenas se não houver registro hoje para não poluir
+                    if(!boxHTML) boxHTML += `<div class="status-box box-memory"><i class="fas fa-history"></i> ${aula.memoria}</div>`;
 
                     lista.innerHTML += `
                     <div class="card">
                         <div class="card-header">
                             <div class="turma-badge">${aula.turma}</div>
-                            <div style="font-size:0.9rem; color:#666">${aula.inicio} - ${aula.sala}</div>
+                            <div style="font-size:0.9rem; color:#666">${aula.inicio}</div>
                         </div>
                         <div class="card-body">
+                            ${renderizarTags(aula)}
                             ${boxHTML}
                         </div>
                         <button class="btn-action" onclick="abrirModal('${aula.turma}', '${aula.dataFormatada}', 'REALIZADO', '${aula.conteudoHoje || ''}', '${aula.obsHoje || ''}')">
@@ -209,9 +191,9 @@
         }
 
         function carregarSemana() {
-            let label = offsetSemana === 0 ? "Esta Semana" : (offsetSemana > 0 ? `Daqui a ${offsetSemana/7} semanas` : `Semana Passada`);
+            let label = offsetSemana === 0 ? "Esta Semana" : (offsetSemana > 0 ? `+${offsetSemana/7} Semana(s)` : `${offsetSemana/7} Semana(s)`);
             document.getElementById('display-data').innerText = label;
-            document.getElementById('lista-semana').innerHTML = `<p style="text-align:center"><i class="fas fa-spinner fa-spin"></i> Carregando planejamento...</p>`;
+            document.getElementById('lista-semana').innerHTML = `<p style="text-align:center"><i class="fas fa-spinner fa-spin"></i></p>`;
 
             fetch(`${API_URL}?action=getSemana&offset=${offsetSemana}`)
             .then(res => res.json())
@@ -221,13 +203,10 @@
 
                 semana.forEach(dia => {
                     let htmlDia = `<div class="week-day-header"><i class="far fa-calendar"></i> ${dia.data}</div>`;
-                    
-                    if(dia.aulas.length === 0) htmlDia += "<div style='padding:10px; text-align:center; color:#999; font-size:0.8rem'>Livre</div>";
-
                     dia.aulas.forEach(aula => {
                         let status = aula.tipoHoje === "PLANEJADO" 
                             ? `<span style="color:var(--mid-green); font-weight:bold"><i class="fas fa-check"></i> ${aula.conteudoHoje}</span>` 
-                            : `<span style="color:#999; font-style:italic">Não planejado</span>`;
+                            : `<span style="color:#999; font-style:italic">...</span>`;
 
                         htmlDia += `
                         <div class="card" style="margin-top:10px; border-left:4px solid var(--mid-green)">
@@ -236,11 +215,12 @@
                                     <b>Turma ${aula.turma}</b>
                                     <span style="font-size:0.8rem">${aula.inicio}</span>
                                 </div>
-                                <div style="font-size:0.85rem">${status}</div>
+                                ${renderizarTags(aula)}
+                                <div style="font-size:0.85rem; margin-top:5px;">${status}</div>
                             </div>
                             <button class="btn-action" style="padding:8px; font-size:0.85rem" 
-                                onclick="abrirModal('${aula.turma}', '${aula.dataFormatada}', 'PLANEJADO', '${aula.conteudoHoje || ''}', '${aula.obsHoje || ''}')">
-                                <i class="fas fa-pencil-alt"></i> Editar Planejamento
+                                onclick="abrirModal('${aula.turma}', '${aula.dataRaw}', 'PLANEJADO', '${aula.conteudoHoje || ''}', '${aula.obsHoje || ''}')">
+                                <i class="fas fa-pencil-alt"></i> Planejar
                             </button>
                         </div>`;
                     });
@@ -249,26 +229,20 @@
             });
         }
 
-        // Modal Inteligente: Já vem preenchido se tiver dados
-        function abrirModal(turma, data, tipo, conteudoAtual, obsAtual) {
+        function abrirModal(turma, data, tipo, conteudo, obs) {
             document.getElementById('modal').style.display = 'flex';
-            document.getElementById('modal-titulo').innerText = tipo === 'REALIZADO' ? "Registrar o Dia" : "Planejar Futuro";
-            document.getElementById('modal-subtitulo').innerText = `Turma ${turma} • ${data}`;
-            
+            document.getElementById('modal-titulo').innerText = tipo === 'REALIZADO' ? "Registrar" : "Planejar";
+            document.getElementById('modal-subtitulo').innerText = `Turma ${turma} • Data ${data}`;
             document.getElementById('input-turma').value = turma;
             document.getElementById('input-data').value = data;
             document.getElementById('input-tipo').value = tipo;
-            
-            // Preenche se for edição
-            document.getElementById('input-conteudo').value = conteudoAtual === "undefined" ? "" : conteudoAtual;
-            document.getElementById('input-obs').value = obsAtual === "undefined" ? "" : obsAtual;
+            document.getElementById('input-conteudo').value = conteudo !== "undefined" ? conteudo : "";
+            document.getElementById('input-obs').value = obs !== "undefined" ? obs : "";
         }
 
         function salvarDados() {
             const btn = document.querySelector('.btn-save');
-            btn.innerText = "Salvando...";
-            btn.disabled = true;
-            
+            btn.innerText = "Salvando..."; btn.disabled = true;
             const dados = {
                 turma: document.getElementById('input-turma').value,
                 data: document.getElementById('input-data').value,
@@ -276,25 +250,11 @@
                 conteudo: document.getElementById('input-conteudo').value,
                 obs: document.getElementById('input-obs').value
             };
-
-            fetch(API_URL, { method: "POST", body: JSON.stringify(dados) })
-            .then(res => res.json())
-            .then(json => {
-                document.getElementById('modal').style.display = 'none';
-                btn.innerText = "Salvar Registro";
-                btn.disabled = false;
-                
-                // Recarrega a tela que estava aberta
-                if(modoAtual === 'dia') carregarDia();
-                else carregarSemana();
-            })
-            .catch(e => {
-                alert("Erro ao salvar. Verifique a conexão.");
-                btn.disabled = false;
+            fetch(API_URL, { method: "POST", body: JSON.stringify(dados) }).then(res => res.json()).then(() => {
+                document.getElementById('modal').style.display = 'none'; btn.innerText = "Salvar"; btn.disabled = false;
+                if(modoAtual === 'dia') carregarDia(); else carregarSemana();
             });
         }
-
-        // Inicia
         carregarDia();
     </script>
 </body>
