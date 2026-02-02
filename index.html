@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planner Docente Pro</title>
+    <title>Planner Docente V3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
@@ -14,248 +14,232 @@
             --light-green: #2ecc71;
             --bg-color: #f0f5f1;
             --white: #ffffff;
-            --text-dark: #2c3e50;
         }
         
-        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; padding-bottom: 80px; color: var(--text-dark); }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; padding-bottom: 80px; color: #2c3e50; }
         
-        /* Header com Gradiente */
+        /* Header Fixo */
         header {
             background: linear-gradient(135deg, var(--dark-green), var(--mid-green));
-            color: white;
-            padding: 20px;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            color: white; padding: 15px;
             position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        header h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
         
-        /* Navegação (Abas) */
-        .tabs { display: flex; justify-content: center; margin-top: 15px; background: rgba(255,255,255,0.2); border-radius: 30px; padding: 5px; }
-        .tab { flex: 1; text-align: center; padding: 8px; color: white; cursor: pointer; border-radius: 20px; font-size: 0.9rem; transition: 0.3s; }
-        .tab.active { background: white; color: var(--dark-green); font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        /* Navegação de Data */
+        .date-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.15); border-radius: 10px;
+            padding: 8px; margin-top: 10px;
+        }
+        .nav-btn {
+            background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 0 15px;
+        }
+        .current-date-display { font-weight: 600; font-size: 0.95rem; text-transform: capitalize; }
+
+        /* Tabs */
+        .tabs { display: flex; margin-top: 10px; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px; }
+        .tab { flex: 1; text-align: center; padding: 8px; color: rgba(255,255,255,0.7); cursor: pointer; border-radius: 16px; font-size: 0.85rem; }
+        .tab.active { background: white; color: var(--dark-green); font-weight: bold; }
         
-        /* Containers */
-        .container { padding: 20px; display: none; }
+        .container { padding: 15px; display: none; }
         .container.active { display: block; }
         
-        /* Card de Aula (Estilo Profissional) */
+        /* Card */
         .card {
-            background: white;
-            border-radius: 15px;
-            padding: 0;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.05);
-            overflow: hidden;
-            transition: transform 0.2s;
+            background: white; border-radius: 12px; margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden;
         }
-        .card:active { transform: scale(0.98); }
-        
         .card-header {
-            background: #f8fcf9;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #eee;
+            background: #fcfcfc; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0;
         }
-        .turma-badge {
-            background: var(--dark-green); color: white; padding: 5px 12px; border-radius: 8px; font-weight: bold; font-size: 1.1rem;
-        }
-        .hora { color: #666; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-
+        .turma-badge { background: var(--dark-green); color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; }
+        
         .card-body { padding: 15px; }
         
-        .info-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; color: #555; font-size: 0.9rem; }
-        .info-row i { color: var(--mid-green); width: 20px; text-align: center; }
-        
-        /* Memória (O que passou) */
-        .memory-box {
-            background: #fff3cd; color: #856404;
-            padding: 10px; border-radius: 8px;
-            font-size: 0.85rem; margin-top: 10px;
-            border-left: 4px solid #ffeeba;
-        }
+        /* Status Boxes */
+        .status-box { padding: 10px; border-radius: 6px; font-size: 0.85rem; margin-top: 8px; }
+        .box-memory { background: #fff3cd; color: #856404; border-left: 3px solid #ffeeba; }
+        .box-plan { background: #d4edda; color: #155724; border-left: 3px solid #c3e6cb; }
+        .box-done { background: #cce5ff; color: #004085; border-left: 3px solid #b8daff; }
 
-        /* Planejamento (O que vem) */
-        .plan-box {
-            background: #d4edda; color: #155724;
-            padding: 10px; border-radius: 8px;
-            font-size: 0.85rem; margin-top: 10px;
-            border-left: 4px solid #c3e6cb;
-        }
-
-        /* Botões */
         .btn-action {
-            width: 100%; padding: 12px; border: none; background: white;
-            color: var(--mid-green); font-weight: bold; font-size: 0.9rem;
-            border-top: 1px solid #eee; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 12px; border: none; background: white; color: var(--mid-green);
+            font-weight: bold; border-top: 1px solid #eee; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-action:hover { background: #f0f5f1; }
 
-        /* Accordion para Planejamento */
-        .day-header {
-            background: var(--dark-green); color: white; padding: 10px 15px;
-            border-radius: 8px; margin-top: 20px; display: flex; align-items: center; gap: 10px;
+        /* Planejamento Semanal */
+        .week-day-header {
+            background: var(--mid-green); color: white; padding: 8px 15px; border-radius: 6px;
+            margin-top: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 10px;
         }
 
         /* Modal */
-        #modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
-            justify-content: center; align-items: center; z-index: 1000;
-        }
-        .modal-content {
-            background: white; width: 85%; max-width: 400px; padding: 25px;
-            border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        textarea, input {
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
-            margin-top: 5px; margin-bottom: 15px; font-family: 'Poppins'; box-sizing: border-box;
-        }
-        .btn-save {
-            background: linear-gradient(to right, var(--mid-green), var(--light-green));
-            color: white; border: none; padding: 12px; width: 100%; border-radius: 10px;
-            font-weight: bold; font-size: 1rem; cursor: pointer;
-        }
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 85%; max-width: 400px; padding: 25px; border-radius: 15px; }
+        textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; }
+        .btn-save { background: var(--mid-green); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 1rem; }
 
     </style>
 </head>
 <body>
 
     <header>
-        <h1><i class="fas fa-graduation-cap"></i> Planner Docente</h1>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h1 style="margin:0; font-size:1.1rem;"><i class="fas fa-chalkboard-teacher"></i> Planner</h1>
+        </div>
+        
+        <div class="date-nav">
+            <button class="nav-btn" onclick="navegar(-1)"><i class="fas fa-chevron-left"></i></button>
+            <span id="display-data" class="current-date-display">Carregando...</span>
+            <button class="nav-btn" onclick="navegar(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
         <div class="tabs">
-            <div class="tab active" onclick="mudarAba('hoje')">Hoje</div>
-            <div class="tab" onclick="mudarAba('planejamento')">Planejamento</div>
+            <div class="tab active" onclick="mudarModo('dia')">Diário (Dia)</div>
+            <div class="tab" onclick="mudarModo('semana')">Planejar (Semana)</div>
         </div>
     </header>
 
-    <div id="view-hoje" class="container active">
-        <div id="loading-hoje" style="text-align:center; padding: 20px; color:#666;">
-            <i class="fas fa-spinner fa-spin"></i> Carregando aulas...
-        </div>
-        <div id="lista-hoje"></div>
+    <div id="view-dia" class="container active">
+        <div id="lista-dia"></div>
     </div>
 
-    <div id="view-planejamento" class="container">
-        <div id="loading-plan" style="text-align:center; padding: 20px; color:#666;">
-            <i class="fas fa-spinner fa-spin"></i> Carregando semana...
-        </div>
-        <div id="lista-planejamento"></div>
+    <div id="view-semana" class="container">
+        <div id="lista-semana"></div>
     </div>
 
     <div id="modal">
         <div class="modal-content">
-            <h3 style="margin-top:0; color:var(--dark-green)">
-                <i class="fas fa-pen-fancy"></i> <span id="modal-titulo">Registro</span>
-            </h3>
-            <p id="modal-subtitulo" style="font-size:0.9rem; color:#666"></p>
+            <h3 style="margin-top:0; color:var(--dark-green)"><span id="modal-titulo">Registro</span></h3>
+            <p id="modal-subtitulo" style="font-size:0.85rem; color:#666; margin-bottom:15px;"></p>
             
-            <label>Conteúdo / Atividade</label>
-            <textarea id="input-conteudo" rows="3"></textarea>
+            <label style="font-size:0.9rem; font-weight:bold;">Conteúdo / Atividade</label>
+            <textarea id="input-conteudo" rows="4"></textarea>
             
-            <label>Obs / Próxima Aula</label>
+            <label style="font-size:0.9rem; font-weight:bold;">Obs / Próxima Aula</label>
             <textarea id="input-obs" rows="2"></textarea>
             
             <input type="hidden" id="input-data">
             <input type="hidden" id="input-turma">
             <input type="hidden" id="input-tipo">
 
-            <button class="btn-save" onclick="salvarDados()">Salvar</button>
-            <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; width:100%; padding:10px; color:#666; cursor:pointer; margin-top:5px;">Cancelar</button>
+            <button class="btn-save" onclick="salvarDados()">Salvar Registro</button>
+            <button onclick="document.getElementById('modal').style.display='none'" style="background:none; border:none; width:100%; padding:10px; color:#666; margin-top:5px;">Cancelar</button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyGL8lNvAvahNezNFlvoYLeRiSmH0Lz4oFwipK5Z1ALBAHhOh1IEUx0Px-UIZsOP_aY/exec"; // Atualize a URL após o deploy!
+        const API_URL = "https://script.google.com/macros/s/AKfycbziX_CzN72CKewOOUxEanfjAmfWIeo8WJ7FZOqjMbLaYIuYw8-K8xPiUNg8IhVuClGG/exec"; 
 
-        function mudarAba(aba) {
+        let modoAtual = 'dia'; // 'dia' ou 'semana'
+        let offsetDia = 0; // 0 = Hoje
+        let offsetSemana = 0; // 0 = Semana Atual
+
+        function mudarModo(novoModo) {
+            modoAtual = novoModo;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
             
-            if(aba === 'hoje') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
-                document.getElementById('view-hoje').classList.add('active');
-                carregarHoje();
+            if(modoAtual === 'dia') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('view-dia').classList.add('active');
+                carregarDia();
             } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
-                document.getElementById('view-planejamento').classList.add('active');
-                carregarPlanejamento();
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('view-semana').classList.add('active');
+                carregarSemana();
             }
         }
 
-        // --- CARREGAR AULAS DE HOJE ---
-        function carregarHoje() {
-            fetch(API_URL + "?action=getHoje")
+        function navegar(direcao) {
+            if(modoAtual === 'dia') {
+                offsetDia += direcao; // Volta ou avança 1 dia
+                carregarDia();
+            } else {
+                offsetSemana += (direcao * 7); // Volta ou avança 7 dias
+                carregarSemana();
+            }
+        }
+
+        function carregarDia() {
+            document.getElementById('display-data').innerHTML = `<i class="fas fa-spinner fa-spin"></i> Buscando...`;
+            document.getElementById('lista-dia').innerHTML = ""; // Limpa visualmente
+
+            fetch(`${API_URL}?action=getDia&offset=${offsetDia}`)
             .then(res => res.json())
-            .then(data => {
-                const lista = document.getElementById('lista-hoje');
-                document.getElementById('loading-hoje').style.display = 'none';
+            .then(json => {
+                document.getElementById('display-data').innerText = json.data; // Mostra data no topo
+                const lista = document.getElementById('lista-dia');
                 lista.innerHTML = "";
 
-                if(data.length === 0) {
-                    lista.innerHTML = "<p style='text-align:center'>Nenhuma aula hoje. Bom descanso! ☕</p>";
-                    return;
-                }
+                if(json.aulas.length === 0) lista.innerHTML = "<p style='text-align:center; margin-top:20px; color:#999'>Sem aulas neste dia.</p>";
 
-                data.forEach(aula => {
-                    // Se tiver planejamento prévio, mostra ele. Se não, mostra memória.
-                    let conteudoExtra = "";
-                    if(aula.planejamento) {
-                        conteudoExtra = `<div class="plan-box"><i class="fas fa-thumbtack"></i> <b>Planejado:</b> ${aula.planejamento}</div>`;
-                    } else {
-                        conteudoExtra = `<div class="memory-box"><i class="fas fa-history"></i> ${aula.memoria}</div>`;
+                json.aulas.forEach(aula => {
+                    // Lógica visual dos boxes
+                    let boxHTML = "";
+                    
+                    // Se já foi REALIZADO
+                    if(aula.tipoHoje === "REALIZADO") {
+                        boxHTML += `<div class="status-box box-done"><i class="fas fa-check"></i> <b>Feito:</b> ${aula.conteudoHoje}</div>`;
+                    } 
+                    // Se foi PLANEJADO
+                    else if(aula.tipoHoje === "PLANEJADO") {
+                        boxHTML += `<div class="status-box box-plan"><i class="fas fa-thumbtack"></i> <b>Planejado:</b> ${aula.conteudoHoje}</div>`;
                     }
 
-                    const html = `
+                    // Memória (sempre mostra o histórico anterior)
+                    boxHTML += `<div class="status-box box-memory"><i class="fas fa-history"></i> ${aula.memoria}</div>`;
+
+                    lista.innerHTML += `
                     <div class="card">
                         <div class="card-header">
                             <div class="turma-badge">${aula.turma}</div>
-                            <div class="hora"><i class="far fa-clock"></i> ${aula.inicio} - ${aula.fim}</div>
+                            <div style="font-size:0.9rem; color:#666">${aula.inicio} - ${aula.sala}</div>
                         </div>
                         <div class="card-body">
-                            <div class="info-row"><i class="fas fa-map-marker-alt"></i> Sala ${aula.sala}</div>
-                            ${conteudoExtra}
+                            ${boxHTML}
                         </div>
-                        <button class="btn-action" onclick="abrirModal('${aula.turma}', '${aula.dataFormatada}', 'REALIZADO')">
-                            <i class="fas fa-check-circle"></i> Registrar Aula Realizada
+                        <button class="btn-action" onclick="abrirModal('${aula.turma}', '${aula.dataFormatada}', 'REALIZADO', '${aula.conteudoHoje || ''}', '${aula.obsHoje || ''}')">
+                            <i class="fas fa-pen"></i> Registrar Aula
                         </button>
                     </div>`;
-                    lista.innerHTML += html;
                 });
             });
         }
 
-        // --- CARREGAR PLANEJAMENTO (FUTURO) ---
-        function carregarPlanejamento() {
-            fetch(API_URL + "?action=getPlanejamento")
+        function carregarSemana() {
+            let label = offsetSemana === 0 ? "Esta Semana" : (offsetSemana > 0 ? `Daqui a ${offsetSemana/7} semanas` : `Semana Passada`);
+            document.getElementById('display-data').innerText = label;
+            document.getElementById('lista-semana').innerHTML = `<p style="text-align:center"><i class="fas fa-spinner fa-spin"></i> Carregando planejamento...</p>`;
+
+            fetch(`${API_URL}?action=getSemana&offset=${offsetSemana}`)
             .then(res => res.json())
-            .then(data => {
-                const lista = document.getElementById('lista-planejamento');
-                document.getElementById('loading-plan').style.display = 'none';
+            .then(semana => {
+                const lista = document.getElementById('lista-semana');
                 lista.innerHTML = "";
 
-                data.forEach(dia => {
-                    let htmlDia = `<div class="day-header"><i class="far fa-calendar-alt"></i> ${dia.data}</div>`;
+                semana.forEach(dia => {
+                    let htmlDia = `<div class="week-day-header"><i class="far fa-calendar"></i> ${dia.data}</div>`;
                     
+                    if(dia.aulas.length === 0) htmlDia += "<div style='padding:10px; text-align:center; color:#999; font-size:0.8rem'>Livre</div>";
+
                     dia.aulas.forEach(aula => {
-                        // Verifica se já tem algo planejado
-                        let statusPlan = aula.planejamento ? `<span style="color:var(--mid-green)">(${aula.planejamento})</span>` : "<span style='color:#999; font-style:italic'>Nada planejado ainda</span>";
+                        let status = aula.tipoHoje === "PLANEJADO" 
+                            ? `<span style="color:var(--mid-green); font-weight:bold"><i class="fas fa-check"></i> ${aula.conteudoHoje}</span>` 
+                            : `<span style="color:#999; font-style:italic">Não planejado</span>`;
 
                         htmlDia += `
-                        <div class="card" style="margin-top:10px; border-left: 4px solid var(--mid-green)">
-                            <div class="card-body" style="padding: 10px 15px;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <div class="card" style="margin-top:10px; border-left:4px solid var(--mid-green)">
+                            <div class="card-body" style="padding:10px 15px">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:5px">
                                     <b>Turma ${aula.turma}</b>
-                                    <span style="font-size:0.8rem; color:#666">${aula.inicio}</span>
+                                    <span style="font-size:0.8rem">${aula.inicio}</span>
                                 </div>
-                                <div style="font-size:0.9rem;">${statusPlan}</div>
+                                <div style="font-size:0.85rem">${status}</div>
                             </div>
-                            <button class="btn-action" style="font-size:0.8rem; padding:8px" onclick="abrirModal('${aula.turma}', '${aula.dataFormatada}', 'PLANEJADO')">
+                            <button class="btn-action" style="padding:8px; font-size:0.85rem" 
+                                onclick="abrirModal('${aula.turma}', '${aula.dataFormatada}', 'PLANEJADO', '${aula.conteudoHoje || ''}', '${aula.obsHoje || ''}')">
                                 <i class="fas fa-pencil-alt"></i> Editar Planejamento
                             </button>
                         </div>`;
@@ -265,25 +249,25 @@
             });
         }
 
-        // --- FUNÇÕES DO MODAL ---
-        function abrirModal(turma, data, tipo) {
+        // Modal Inteligente: Já vem preenchido se tiver dados
+        function abrirModal(turma, data, tipo, conteudoAtual, obsAtual) {
             document.getElementById('modal').style.display = 'flex';
-            document.getElementById('modal-titulo').innerText = tipo === 'REALIZADO' ? "Registrar Aula" : "Planejar Aula";
-            document.getElementById('modal-subtitulo').innerText = `Turma ${turma} - ${data}`;
+            document.getElementById('modal-titulo').innerText = tipo === 'REALIZADO' ? "Registrar o Dia" : "Planejar Futuro";
+            document.getElementById('modal-subtitulo').innerText = `Turma ${turma} • ${data}`;
             
-            // Preenche hidden inputs
             document.getElementById('input-turma').value = turma;
             document.getElementById('input-data').value = data;
             document.getElementById('input-tipo').value = tipo;
             
-            // Limpa campos
-            document.getElementById('input-conteudo').value = "";
-            document.getElementById('input-obs').value = "";
+            // Preenche se for edição
+            document.getElementById('input-conteudo').value = conteudoAtual === "undefined" ? "" : conteudoAtual;
+            document.getElementById('input-obs').value = obsAtual === "undefined" ? "" : obsAtual;
         }
 
         function salvarDados() {
             const btn = document.querySelector('.btn-save');
             btn.innerText = "Salvando...";
+            btn.disabled = true;
             
             const dados = {
                 turma: document.getElementById('input-turma').value,
@@ -296,22 +280,22 @@
             fetch(API_URL, { method: "POST", body: JSON.stringify(dados) })
             .then(res => res.json())
             .then(json => {
-                alert("Salvo com sucesso!");
                 document.getElementById('modal').style.display = 'none';
-                btn.innerText = "Salvar";
+                btn.innerText = "Salvar Registro";
+                btn.disabled = false;
                 
-                // Recarrega a aba atual
-                if(dados.tipo === 'REALIZADO') carregarHoje();
-                else carregarPlanejamento();
+                // Recarrega a tela que estava aberta
+                if(modoAtual === 'dia') carregarDia();
+                else carregarSemana();
             })
-            .catch(e => { alert("Erro"); btn.innerText = "Salvar"; });
+            .catch(e => {
+                alert("Erro ao salvar. Verifique a conexão.");
+                btn.disabled = false;
+            });
         }
 
         // Inicia
-        carregarHoje();
+        carregarDia();
     </script>
 </body>
 </html>
-
-
-
