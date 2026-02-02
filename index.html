@@ -3,235 +3,989 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docente V5 - Final</title>
+    <title>Docente V5 - Planejamento de Aulas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #0f3d24; --accent: #218c74; --bg: #f4f7f6; --white: #fff; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; color: #333; }
+        :root { 
+            --primary: #0f3d24; 
+            --accent: #218c74; 
+            --bg: #f4f7f6; 
+            --white: #fff; 
+            --error: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
         
-        header { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        * {
+            box-sizing: border-box;
+        }
         
-        .date-nav { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.2); border-radius: 8px; padding: 8px; margin-top: 10px; }
-        .nav-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 0 15px; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding-bottom: 80px; 
+            color: #333; 
+            line-height: 1.6;
+        }
         
-        .tabs { display: flex; margin-top: 10px; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px; }
-        .tab { flex: 1; text-align: center; padding: 8px; color: rgba(255,255,255,0.7); cursor: pointer; border-radius: 16px; font-size: 0.85rem; }
-        .tab.active { background: white; color: var(--primary); font-weight: bold; }
+        header { 
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: white; 
+            padding: 15px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
         
-        .container { padding: 15px; display: none; }
-        .container.active { display: block; }
+        .date-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(255,255,255,0.2); 
+            border-radius: 8px; 
+            padding: 8px; 
+            margin-top: 10px; 
+        }
         
-        .card { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; border-left: 5px solid var(--accent); }
-        .card-header { background: #fff; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
-        .turma-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-weight: bold; }
-        .card-body { padding: 15px; }
+        .nav-btn { 
+            background: none; 
+            border: none; 
+            color: white; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            padding: 0 15px; 
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .tabs { 
+            display: flex; 
+            margin-top: 10px; 
+            background: rgba(0,0,0,0.2); 
+            border-radius: 20px; 
+            padding: 4px; 
+        }
+        
+        .tab { 
+            flex: 1; 
+            text-align: center; 
+            padding: 8px; 
+            color: rgba(255,255,255,0.7); 
+            cursor: pointer; 
+            border-radius: 16px; 
+            font-size: 0.85rem; 
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .tab.active { 
+            background: white; 
+            color: var(--primary); 
+            font-weight: bold; 
+        }
+        
+        .container { 
+            padding: 15px; 
+            display: none; 
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .container.active { 
+            display: block; 
+        }
+        
+        .card { 
+            background: white; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+            overflow: hidden; 
+            border-left: 5px solid var(--accent);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .card-header { 
+            background: #fff; 
+            padding: 12px 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #eee; 
+        }
+        
+        .turma-badge { 
+            background: var(--primary); 
+            color: white; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            font-size: 0.9rem;
+        }
+        
+        .card-body { 
+            padding: 15px; 
+        }
 
         /* Infraestrutura */
-        .infra-tags { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
-        .tag { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; display: flex; align-items: center; gap: 4px; }
-        .tag.sala { background: #e8f8f5; color: var(--accent); font-weight: bold; }
-        .tag.alert { background: #fadbd8; color: #c0392b; border: 1px solid #c0392b; }
-        .tag.ok { background: #d4efdf; color: #1e8449; }
-        .tag.aux { background: #fdebd0; color: #d35400; border: 1px solid #d35400; }
+        .infra-tags { 
+            display: flex; 
+            gap: 5px; 
+            margin-bottom: 10px; 
+            flex-wrap: wrap; 
+        }
+        
+        .tag { 
+            font-size: 0.75rem; 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            display: flex; 
+            align-items: center; 
+            gap: 4px; 
+        }
+        
+        .tag.sala { 
+            background: #e8f8f5; 
+            color: var(--accent); 
+            font-weight: bold; 
+        }
+        
+        .tag.alert { 
+            background: #fadbd8; 
+            color: #c0392b; 
+            border: 1px solid #c0392b; 
+        }
+        
+        .tag.ok { 
+            background: #d4efdf; 
+            color: #1e8449; 
+        }
+        
+        .tag.aux { 
+            background: #fdebd0; 
+            color: #d35400; 
+            border: 1px solid #d35400; 
+        }
 
-        .status-box { padding: 10px; border-radius: 6px; font-size: 0.85rem; margin-top: 8px; }
-        .box-memory { background: #fff3cd; color: #856404; border-left: 3px solid #ffeeba; margin-bottom: 5px;}
-        .box-plan { background: #d1f2eb; color: #0e6251; border-left: 3px solid #a2d9ce; }
-        .box-done { background: #d6eaf8; color: #21618c; border-left: 3px solid #a9cce3; }
+        .status-box { 
+            padding: 10px; 
+            border-radius: 6px; 
+            font-size: 0.85rem; 
+            margin-top: 8px; 
+        }
+        
+        .box-memory { 
+            background: #fff3cd; 
+            color: #856404; 
+            border-left: 3px solid #ffeeba; 
+            margin-bottom: 5px;
+        }
+        
+        .box-plan { 
+            background: #d1f2eb; 
+            color: #0e6251; 
+            border-left: 3px solid #a2d9ce; 
+        }
+        
+        .box-done { 
+            background: #d6eaf8; 
+            color: #21618c; 
+            border-left: 3px solid #a9cce3; 
+        }
 
-        .btn-action { width: 100%; padding: 12px; background: #fff; border: none; border-top: 1px solid #eee; color: var(--accent); font-weight: bold; cursor: pointer; }
+        .btn-action { 
+            width: 100%; 
+            padding: 12px; 
+            background: #fff; 
+            border: none; 
+            border-top: 1px solid #eee; 
+            color: var(--accent); 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-action:hover {
+            background: #f9f9f9;
+        }
         
         /* Modal */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 90%; max-width: 400px; padding: 20px; border-radius: 10px; }
-        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; font-family: inherit; }
+        #modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 999; 
+            justify-content: center; 
+            align-items: center; 
+            animation: fadeIn 0.3s;
+        }
+        
+        .modal-content { 
+            background: white; 
+            width: 90%; 
+            max-width: 500px; 
+            padding: 25px; 
+            border-radius: 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .modal-close:hover {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            margin-bottom: 15px; 
+            box-sizing: border-box; 
+            font-family: inherit; 
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: border 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(33, 140, 116, 0.1);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
         
         /* Ocultar campo OBS se necessário */
-        .hidden { display: none; }
+        .hidden { 
+            display: none; 
+        }
+        
+        /* Mensagens de status */
+        .status-message {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #f5c6cb;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #c3e6cb;
+        }
+        
+        .status-loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #bee5eb;
+        }
+        
+        /* Botões */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: #1a7c68;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        /* Estado vazio */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .date-nav {
+                padding: 5px;
+            }
+            
+            .modal-content {
+                padding: 20px 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <div style="display:flex; justify-content:space-between;"><b>Planner V5</b> <span id="loading-status"></span></div>
-        <div class="date-nav">
-            <button class="nav-btn" onclick="navegar(-1)"><i class="fas fa-chevron-left"></i></button>
-            <span id="display-data" style="font-weight:bold">Hoje</span>
-            <button class="nav-btn" onclick="navegar(1)"><i class="fas fa-chevron-right"></i></button>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <b>Planner V5 - Controle de Aulas</b> 
+            <span id="loading-status"></span>
         </div>
+        
+        <div class="date-nav">
+            <button class="nav-btn" onclick="navegar(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <span id="display-data" style="font-weight:bold; text-align:center; flex:1">Carregando...</span>
+            <button class="nav-btn" onclick="navegar(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        
         <div class="tabs">
-            <div class="tab active" onclick="mudarModo('dia')">Diário</div>
-            <div class="tab" onclick="mudarModo('semana')">Planejar</div>
+            <div class="tab active" onclick="mudarModo('dia')">
+                <i class="fas fa-calendar-day"></i> Diário
+            </div>
+            <div class="tab" onclick="mudarModo('semana')">
+                <i class="fas fa-calendar-week"></i> Planejar
+            </div>
         </div>
     </header>
 
-    <div id="view-dia" class="container active"></div>
-    <div id="view-semana" class="container"></div>
+    <div id="view-dia" class="container active">
+        <div id="dia-content">
+            <!-- Conteúdo será carregado aqui -->
+        </div>
+    </div>
+    
+    <div id="view-semana" class="container">
+        <div id="semana-content">
+            <!-- Conteúdo será carregado aqui -->
+        </div>
+    </div>
 
     <div id="modal">
         <div class="modal-content">
-            <h3 id="modal-titulo" style="margin-top:0; color:var(--primary)">Registro</h3>
-            <p id="modal-subtitulo" style="font-size:0.8rem; color:#666"></p>
+            <div class="modal-header">
+                <h3 id="modal-titulo" style="margin:0; color:var(--primary)">Registro de Aula</h3>
+                <button class="modal-close" onclick="fecharModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             
-            <label>Conteúdo / Atividade:</label>
-            <textarea id="input-conteudo" rows="4"></textarea>
+            <p id="modal-subtitulo" style="font-size:0.85rem; color:#666; margin-top:0; margin-bottom:20px"></p>
+            
+            <label for="input-conteudo">Conteúdo / Atividade:</label>
+            <textarea id="input-conteudo" rows="5" placeholder="Descreva o conteúdo da aula..."></textarea>
             
             <div id="div-obs">
-                <label>Obs / Próxima Aula:</label>
-                <textarea id="input-obs" rows="2"></textarea>
+                <label for="input-obs">Observações / Próxima Aula:</label>
+                <textarea id="input-obs" rows="3" placeholder="Observações importantes ou planejamento para próxima aula..."></textarea>
             </div>
             
             <input type="hidden" id="input-data">
             <input type="hidden" id="input-turma">
             <input type="hidden" id="input-tipo">
 
-            <button onclick="salvar()" style="width:100%; padding:12px; background:var(--accent); color:white; border:none; border-radius:5px; font-weight:bold">Salvar</button>
-            <button onclick="document.getElementById('modal').style.display='none'" style="width:100%; padding:10px; background:none; border:none; color:#666; margin-top:5px">Cancelar</button>
+            <button class="btn btn-primary" onclick="salvar()">
+                <i class="fas fa-save"></i> Salvar Registro
+            </button>
+            <button class="btn btn-secondary" onclick="fecharModal()">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzF00vCKZ95Wa4E80gVqRBAG-JXq52cXUqVZ2UIxbJZ-D77EgRAP1d52MurN17LSbKl/exec"; // Atualize a URL!
-
+        // ================= CONFIGURAÇÃO IMPORTANTE =================
+        // SUBSTITUA A URL ABAIXO PELA URL DO SEU WEB APP DO GOOGLE APPS SCRIPT
+        // Vá no Apps Script: Publicar > Implantar como aplicação web
+        // Copie a URL e cole aqui:
+        const API_URL = "SUA_URL_DO_WEB_APP_AQUI";
+        // ===========================================================
+        
+        // Variáveis globais
         let modo = 'dia';
         let offsetDia = 0;
         let offsetSemana = 0;
+        let carregando = false;
 
+        // Elementos do DOM
+        const diaContent = document.getElementById('dia-content');
+        const semanaContent = document.getElementById('semana-content');
+        const displayData = document.getElementById('display-data');
+        const loadingStatus = document.getElementById('loading-status');
+
+        // ================= FUNÇÕES PRINCIPAIS =================
+        
         function mudarModo(m) {
+            if (carregando) return;
+            
             modo = m;
+            
+            // Atualizar tabs
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
             
             if (modo === 'dia') {
-                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
                 document.getElementById('view-dia').classList.add('active');
                 carregarDia();
             } else {
-                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
                 document.getElementById('view-semana').classList.add('active');
                 carregarSemana();
             }
         }
 
         function navegar(dir) {
-            if (modo === 'dia') { offsetDia += dir; carregarDia(); }
-            else { offsetSemana += (dir * 7); carregarSemana(); }
+            if (carregando) return;
+            
+            if (modo === 'dia') { 
+                offsetDia += dir; 
+                carregarDia(); 
+            } else { 
+                offsetSemana += (dir * 7); 
+                carregarSemana(); 
+            }
+        }
+
+        function mostrarCarregando(mensagem = 'Carregando...') {
+            loadingStatus.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${mensagem}`;
+            carregando = true;
+        }
+
+        function esconderCarregando() {
+            loadingStatus.innerHTML = '';
+            carregando = false;
+        }
+
+        function mostrarErro(mensagem) {
+            const div = modo === 'dia' ? diaContent : semanaContent;
+            div.innerHTML = `
+                <div class="status-message status-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Erro:</strong> ${mensagem}
+                        <br>
+                        <small>Verifique a conexão e tente novamente.</small>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="${modo === 'dia' ? 'carregarDia' : 'carregarSemana'}()">
+                    <i class="fas fa-redo"></i> Tentar Novamente
+                </button>
+            `;
         }
 
         function renderInfra(aula) {
-            let html = `<div class="infra-tags"><div class="tag sala"><i class="fas fa-door-closed"></i> ${aula.sala}</div>`;
+            let html = `<div class="infra-tags">
+                <div class="tag sala">
+                    <i class="fas fa-door-closed"></i> ${aula.sala}
+                </div>`;
             
-            if(aula.projetor) {
-                let ruim = aula.projetor.toLowerCase().match(/ruim|alta|quebrado/);
-                html += `<div class="tag ${ruim ? 'alert' : 'ok'}"><i class="fas fa-video"></i> ${aula.projetor}</div>`;
+            if(aula.projetor && aula.projetor.trim() !== '') {
+                let ruim = aula.projetor.toLowerCase().match(/ruim|alta|quebrado|problema/);
+                html += `<div class="tag ${ruim ? 'alert' : 'ok'}">
+                    <i class="fas fa-video"></i> ${aula.projetor}
+                </div>`;
             }
-            if(aula.auxiliar) {
-                html += `<div class="tag aux"><i class="fas fa-hands-helping"></i> ${aula.auxiliar}</div>`;
+            
+            if(aula.auxiliar && aula.auxiliar.trim() !== '') {
+                html += `<div class="tag aux">
+                    <i class="fas fa-hands-helping"></i> ${aula.auxiliar}
+                </div>`;
             }
+            
             return html + `</div>`;
         }
 
+        // ================= FUNÇÃO PARA CARREGAR DIA =================
+        
         function carregarDia() {
-            document.getElementById('display-data').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            fetch(`${API_URL}?action=getDia&offset=${offsetDia}`).then(r => r.json()).then(json => {
-                document.getElementById('display-data').innerText = json.dataExtenso;
-                const div = document.getElementById('view-dia');
-                div.innerHTML = "";
-                
-                if(json.aulas.length === 0) div.innerHTML = "<p style='text-align:center; color:#999; margin-top:20px'>Sem aulas.</p>";
-
-                json.aulas.forEach(a => {
-                    let status = "";
-                    if (a.tipoHoje === "REALIZADO") status = `<div class="status-box box-done"><i class="fas fa-check"></i> <b>Feito:</b> ${a.conteudoHoje}</div>`;
-                    else if (a.tipoHoje === "PLANEJADO") status = `<div class="status-box box-plan"><i class="fas fa-thumbtack"></i> <b>Planejado:</b> ${a.conteudoHoje}</div>`;
+            if (carregando) return;
+            
+            mostrarCarregando('Buscando aulas...');
+            diaContent.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><br>Carregando aulas do dia...</div>';
+            
+            const url = `${API_URL}?action=getDia&offset=${offsetDia}`;
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    esconderCarregando();
                     
-                    div.innerHTML += `
-                    <div class="card">
-                        <div class="card-header"><span class="turma-badge">${a.turma}</span> <span>${a.inicio} - ${a.fim}</span></div>
-                        <div class="card-body">
-                            ${renderInfra(a)}
-                            <div class="status-box box-memory"><i class="fas fa-history"></i> ${a.memoria}</div>
-                            ${status}
-                        </div>
-                        <button class="btn-action" onclick="abrirModal('${a.turma}', '${a.dataFormatada}', 'REALIZADO', '${a.conteudoHoje||''}', '${a.obsHoje||''}')"><i class="fas fa-pen"></i> Registrar Aula</button>
-                    </div>`;
-                });
-            });
-        }
-
-        function carregarSemana() {
-            let txt = offsetSemana === 0 ? "Esta Semana" : (offsetSemana > 0 ? `+${offsetSemana/7} Semana` : `${offsetSemana/7} Semana`);
-            document.getElementById('display-data').innerText = txt;
-            document.getElementById('view-semana').innerHTML = '<p style="text-align:center"><i class="fas fa-spinner fa-spin"></i></p>';
-
-            fetch(`${API_URL}?action=getSemana&offset=${offsetSemana}`).then(r => r.json()).then(json => {
-                const div = document.getElementById('view-semana');
-                div.innerHTML = "";
-                
-                json.forEach(dia => {
-                    let htmlDia = `<div style="background:var(--accent); color:white; padding:5px 10px; border-radius:5px; margin-top:15px; font-size:0.9rem">${dia.data}</div>`;
+                    if (json.status === "erro") {
+                        mostrarErro(json.message);
+                        displayData.innerText = "Erro";
+                        return;
+                    }
                     
-                    dia.aulas.forEach(a => {
-                        let txtPlan = a.tipoHoje === "PLANEJADO" ? `<b>Planejado:</b> ${a.conteudoHoje}` : `<span style="color:#aaa">...</span>`;
-                        
-                        htmlDia += `
-                        <div class="card" style="margin-top:10px; border-left:4px solid var(--primary)">
-                            <div class="card-body" style="padding:10px">
-                                <div style="display:flex; justify-content:space-between"><b>${a.turma}</b> <small>${a.inicio}</small></div>
-                                ${renderInfra(a)}
-                                <div style="font-size:0.85rem; margin-top:5px">${txtPlan}</div>
+                    // Atualizar data exibida
+                    let dataTexto = json.dataExtenso;
+                    if (offsetDia === 0) {
+                        dataTexto += ' (Hoje)';
+                    } else if (offsetDia === 1) {
+                        dataTexto += ' (Amanhã)';
+                    } else if (offsetDia === -1) {
+                        dataTexto += ' (Ontem)';
+                    }
+                    
+                    displayData.innerText = dataTexto;
+                    
+                    // Renderizar aulas
+                    if (!json.aulas || json.aulas.length === 0) {
+                        diaContent.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-times"></i>
+                                <h3>Nenhuma aula hoje</h3>
+                                <p>Não há aulas agendadas para esta data.</p>
                             </div>
-                            <button class="btn-action" onclick="abrirModal('${a.turma}', '${a.dataRaw}', 'PLANEJADO', '${a.conteudoHoje||''}', '')" style="padding:8px; font-size:0.8rem">Editar Planejamento</button>
-                        </div>`;
+                        `;
+                        return;
+                    }
+                    
+                    let html = '';
+                    
+                    json.aulas.forEach(aula => {
+                        let status = "";
+                        let botaoTexto = "Registrar Aula";
+                        let botaoIcone = "fa-pen";
+                        
+                        if (aula.tipoHoje === "REALIZADO") {
+                            status = `
+                                <div class="status-box box-done">
+                                    <i class="fas fa-check-circle"></i> 
+                                    <strong>Aula Realizada:</strong> ${aula.conteudoHoje || 'Sem descrição'}
+                                    ${aula.obsHoje ? `<br><small><strong>Obs:</strong> ${aula.obsHoje}</small>` : ''}
+                                </div>
+                            `;
+                            botaoTexto = "Editar Registro";
+                            botaoIcone = "fa-edit";
+                        } else if (aula.tipoHoje === "PLANEJADO") {
+                            status = `
+                                <div class="status-box box-plan">
+                                    <i class="fas fa-thumbtack"></i> 
+                                    <strong>Planejado:</strong> ${aula.conteudoHoje || 'Sem planejamento'}
+                                </div>
+                            `;
+                            botaoTexto = "Registrar Realizado";
+                            botaoIcone = "fa-check";
+                        }
+                        
+                        html += `
+                        <div class="card" id="aula-${aula.turma.replace(/\s+/g, '-')}">
+                            <div class="card-header">
+                                <span class="turma-badge">${aula.turma}</span>
+                                <span style="font-weight:600">${aula.inicio} - ${aula.fim}</span>
+                            </div>
+                            <div class="card-body">
+                                ${renderInfra(aula)}
+                                
+                                <div class="status-box box-memory">
+                                    <i class="fas fa-history"></i> 
+                                    <strong>Última Aula:</strong> ${aula.memoria}
+                                </div>
+                                
+                                ${status}
+                            </div>
+                            <button class="btn-action" onclick="abrirModal('${aula.turma.replace(/'/g, "\\'")}', '${aula.dataFormatada}', 'REALIZADO', '${(aula.conteudoHoje || '').replace(/'/g, "\\'")}', '${(aula.obsHoje || '').replace(/'/g, "\\'")}')">
+                                <i class="fas ${botaoIcone}"></i> ${botaoTexto}
+                            </button>
+                        </div>
+                        `;
                     });
-                    div.innerHTML += htmlDia;
+                    
+                    diaContent.innerHTML = html;
+                })
+                .catch(error => {
+                    esconderCarregando();
+                    mostrarErro(`Falha ao carregar dados: ${error.message}`);
+                    console.error('Erro ao carregar dia:', error);
                 });
-            });
         }
 
+        // ================= FUNÇÃO PARA CARREGAR SEMANA =================
+        
+        function carregarSemana() {
+            if (carregando) return;
+            
+            mostrarCarregando('Buscando planejamento...');
+            semanaContent.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><br>Carregando planejamento da semana...</div>';
+            
+            // Calcular texto para exibição
+            let semanaTexto = "";
+            if (offsetSemana === 0) {
+                semanaTexto = "Esta Semana";
+            } else if (offsetSemana > 0) {
+                semanaTexto = `Próxima${offsetSemana > 7 ? ` (+${offsetSemana/7})` : ''}`;
+            } else {
+                semanaTexto = `Anterior${offsetSemana < -7 ? ` (${offsetSemana/7})` : ''}`;
+            }
+            displayData.innerText = semanaTexto;
+            
+            const url = `${API_URL}?action=getSemana&offset=${offsetSemana}`;
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    esconderCarregando();
+                    
+                    if (json.status === "erro") {
+                        mostrarErro(json.message);
+                        return;
+                    }
+                    
+                    if (!json || json.length === 0) {
+                        semanaContent.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-week"></i>
+                                <h3>Semana sem aulas</h3>
+                                <p>Não há aulas planejadas para esta semana.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    let html = '';
+                    
+                    json.forEach(dia => {
+                        html += `
+                            <div style="background:var(--primary); color:white; padding:8px 12px; border-radius:6px; margin:20px 0 10px 0; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center">
+                                <span><i class="fas fa-calendar-day"></i> ${dia.data}</span>
+                                <small>${dia.dataRaw}</small>
+                            </div>
+                        `;
+                        
+                        if (!dia.aulas || dia.aulas.length === 0) {
+                            html += `
+                                <div style="text-align:center; padding:15px; color:#999; font-style:italic; background:#f9f9f9; border-radius:5px; margin-bottom:15px">
+                                    Nenhuma aula neste dia
+                                </div>
+                            `;
+                        } else {
+                            dia.aulas.forEach(aula => {
+                                let conteudo = aula.conteudoHoje || '...';
+                                let tipo = aula.tipoHoje || '';
+                                
+                                html += `
+                                <div class="card" style="margin-top:10px; border-left:4px solid var(--primary)">
+                                    <div class="card-body" style="padding:12px">
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+                                            <b style="font-size:1rem">${aula.turma}</b>
+                                            <small>${aula.inicio} - ${aula.fim}</small>
+                                        </div>
+                                        
+                                        ${renderInfra(aula)}
+                                        
+                                        <div style="margin-top:8px">
+                                            ${tipo === 'PLANEJADO' ? 
+                                                `<div style="background:#e8f5e9; padding:6px 10px; border-radius:4px; font-size:0.85rem">
+                                                    <i class="fas fa-thumbtack" style="color:var(--accent)"></i>
+                                                    <strong>Planejado:</strong> ${conteudo}
+                                                </div>` :
+                                                `<div style="color:#999; font-size:0.85rem; padding:5px">
+                                                    <i>Sem planejamento registrado</i>
+                                                </div>`
+                                            }
+                                        </div>
+                                    </div>
+                                    <button class="btn-action" onclick="abrirModal('${aula.turma.replace(/'/g, "\\'")}', '${dia.dataRaw}', 'PLANEJADO', '${(aula.conteudoHoje || '').replace(/'/g, "\\'")}', '')" style="padding:10px; font-size:0.85rem">
+                                        <i class="fas fa-edit"></i> ${tipo === 'PLANEJADO' ? 'Editar Planejamento' : 'Criar Planejamento'}
+                                    </button>
+                                </div>
+                                `;
+                            });
+                        }
+                    });
+                    
+                    semanaContent.innerHTML = html;
+                })
+                .catch(error => {
+                    esconderCarregando();
+                    mostrarErro(`Falha ao carregar planejamento: ${error.message}`);
+                    console.error('Erro ao carregar semana:', error);
+                });
+        }
+
+        // ================= FUNÇÕES DO MODAL =================
+        
         function abrirModal(turma, data, tipo, conteudo, obs) {
+            // Escapar caracteres especiais para exibição
+            const turmaDisplay = turma.replace(/\\'/g, "'");
+            const conteudoDisplay = conteudo.replace(/\\'/g, "'");
+            const obsDisplay = obs.replace(/\\'/g, "'");
+            
             document.getElementById('modal').style.display = 'flex';
-            document.getElementById('modal-titulo').innerText = tipo === 'REALIZADO' ? "Registrar o Dia" : "Planejar Futuro";
-            document.getElementById('modal-subtitulo').innerText = `${turma} - ${data}`;
+            document.getElementById('modal-titulo').innerText = 
+                tipo === 'REALIZADO' ? "Registrar Aula Realizada" : "Planejar Aula Futura";
+            
+            document.getElementById('modal-subtitulo').innerText = 
+                `${turmaDisplay} - ${data} ${tipo === 'PLANEJADO' ? '(Planejamento)' : ''}`;
             
             document.getElementById('input-turma').value = turma;
             document.getElementById('input-data').value = data;
             document.getElementById('input-tipo').value = tipo;
-            document.getElementById('input-conteudo').value = conteudo !== "undefined" ? conteudo : "";
+            document.getElementById('input-conteudo').value = conteudoDisplay;
             
-            // LOGICA NOVA: Se for Planejamento, esconde OBS
+            // Lógica para mostrar/esconder campo OBS
             if (tipo === 'PLANEJADO') {
                 document.getElementById('div-obs').classList.add('hidden');
                 document.getElementById('input-obs').value = "";
             } else {
                 document.getElementById('div-obs').classList.remove('hidden');
-                document.getElementById('input-obs').value = obs !== "undefined" ? obs : "";
+                document.getElementById('input-obs').value = obsDisplay;
             }
+            
+            // Focar no textarea
+            setTimeout(() => {
+                document.getElementById('input-conteudo').focus();
+            }, 100);
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').style.display = 'none';
         }
 
         function salvar() {
-            const btn = document.querySelector('button[onclick="salvar()"]');
-            btn.innerText = "Salvando...";
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerHTML;
             
+            // Validar campos
+            const conteudo = document.getElementById('input-conteudo').value.trim();
+            if (!conteudo) {
+                alert('Por favor, preencha o conteúdo da aula.');
+                document.getElementById('input-conteudo').focus();
+                return;
+            }
+            
+            // Preparar dados
             const payload = {
                 turma: document.getElementById('input-turma').value,
-                data: document.getElementById('input-data').value, // Formato "2026-06-02"
+                data: document.getElementById('input-data').value,
                 tipo: document.getElementById('input-tipo').value,
-                conteudo: document.getElementById('input-conteudo').value,
-                obs: document.getElementById('input-obs').value
+                conteudo: conteudo,
+                obs: document.getElementById('input-obs').value.trim() || ""
             };
-
-            fetch(API_URL, { method: "POST", body: JSON.stringify(payload) })
-            .then(r => r.json())
+            
+            // Mostrar estado de carregamento
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+            
+            // Enviar para o servidor
+            fetch(API_URL, { 
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(res => {
-                document.getElementById('modal').style.display = 'none';
-                btn.innerText = "Salvar";
-                if (modo === 'dia') carregarDia(); else carregarSemana();
+                // Restaurar botão
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                if (res.status === "erro") {
+                    alert('Erro ao salvar: ' + res.message);
+                    return;
+                }
+                
+                // Fechar modal e recarregar dados
+                fecharModal();
+                
+                // Mostrar mensagem de sucesso
+                const mensagem = res.acao === 'atualizado' ? 
+                    'Planejamento atualizado com sucesso!' : 
+                    'Registro salvo com sucesso!';
+                
+                // Recarregar dados
+                if (modo === 'dia') {
+                    carregarDia();
+                } else {
+                    carregarSemana();
+                }
+                
+                // Feedback visual
+                const feedback = document.createElement('div');
+                feedback.className = 'status-message status-success';
+                feedback.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <div>${mensagem}</div>
+                `;
+                feedback.style.position = 'fixed';
+                feedback.style.top = '70px';
+                feedback.style.left = '50%';
+                feedback.style.transform = 'translateX(-50%)';
+                feedback.style.zIndex = '1000';
+                feedback.style.width = '90%';
+                feedback.style.maxWidth = '400px';
+                feedback.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                
+                document.body.appendChild(feedback);
+                
+                // Remover após 3 segundos
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                    feedback.style.transition = 'opacity 0.5s';
+                    setTimeout(() => feedback.remove(), 500);
+                }, 3000);
+            })
+            .catch(error => {
+                // Restaurar botão
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                alert('Erro de conexão ao salvar: ' + error.message);
+                console.error('Erro ao salvar:', error);
             });
         }
 
-        carregarDia();
+        // ================= INICIALIZAÇÃO =================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se a URL da API está configurada
+            if (API_URL.includes('SUA_URL_DO_WEB_APP_AQUI')) {
+                diaContent.innerHTML = `
+                    <div class="status-message status-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Configuração necessária:</strong>
+                            <p>Antes de usar, você precisa configurar a URL do seu Web App do Google Apps Script.</p>
+                            <ol style="text-align:left; margin:10px 0; padding-left:20px">
+                                <li>Vá no Google Apps Script</li>
+                                <li>Clique em "Publicar" > "Implantar como aplicação web"</li>
+                                <li>Copie a URL fornecida</li>
+                                <li>Cole no arquivo HTML, substituindo "SUA_URL_DO_WEB_APP_AQUI"</li>
+                            </ol>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Configurar evento para fechar modal com ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('modal').style.display === 'flex') {
+                    fecharModal();
+                }
+            });
+            
+            // Carregar dados iniciais
+            carregarDia();
+        });
+
+        // Função para testar a conexão (útil para debug)
+        window.testarConexao = function() {
+            mostrarCarregando('Testando conexão...');
+            
+            fetch(API_URL + '?action=getDia&offset=0')
+                .then(r => r.json())
+                .then(json => {
+                    esconderCarregando();
+                    alert('Conexão OK! Status: ' + (json.status || 'sucesso'));
+                })
+                .catch(err => {
+                    esconderCarregando();
+                    alert('Erro na conexão: ' + err.message);
+                });
+        };
     </script>
 </body>
 </html>
