@@ -483,7 +483,7 @@
         // SUBSTITUA A URL ABAIXO PELA URL DO SEU WEB APP DO GOOGLE APPS SCRIPT
         // Vá no Apps Script: Publicar > Implantar como aplicação web
         // Copie a URL e cole aqui:
-        const API_URL = "https://script.google.com/macros/s/AKfycbwEpdPgMIri1Cqrr8w6MjuJfilHNzDnZP-xbtNDVH5SdAZosB9DCqAUMNI_DNWRYN3S/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbyHVP0xm9yToly23Q6HhDiQa0CqKznbzVbBmL-KHJd8eiq8K0h91lZJx_shBJCPniyb/exec";
         // ===========================================================
         
         // Variáveis globais
@@ -692,112 +692,116 @@
         }
 
         // ================= FUNÇÃO PARA CARREGAR SEMANA =================
+function carregarSemana() {
+  if (carregando) return;
+  
+  mostrarCarregando('Buscando planejamento...');
+  semanaContent.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><br>Carregando planejamento da semana...</div>';
+  
+  // Calcular texto para exibição
+  let semanaTexto = "";
+  if (offsetSemana === 0) {
+    semanaTexto = "Esta Semana";
+  } else if (offsetSemana > 0) {
+    const semanas = offsetSemana / 7;
+    semanaTexto = semanas === 1 ? "Próxima Semana" : `Em ${semanas} semanas`;
+  } else {
+    const semanas = Math.abs(offsetSemana / 7);
+    semanaTexto = semanas === 1 ? "Semana Passada" : `Há ${semanas} semanas`;
+  }
+  displayData.innerText = semanaTexto;
+  
+  const url = `${API_URL}?action=getSemana&offset=${offsetSemana}`;
+  console.log("URL para semana:", url); // Para debug
+  
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(json => {
+      esconderCarregando();
+      
+      // Se for um objeto de erro
+      if (json.status === "erro") {
+        mostrarErro(json.message);
+        return;
+      }
+      
+      // Se for um array vazio ou sem dados
+      if (!json || !Array.isArray(json) || json.length === 0) {
+        semanaContent.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-calendar-week"></i>
+            <h3>Semana sem aulas</h3>
+            <p>Não há aulas planejadas para esta semana.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '';
+      
+      json.forEach(dia => {
+        html += `
+          <div style="background:var(--primary); color:white; padding:8px 12px; border-radius:6px; margin:20px 0 10px 0; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center">
+            <span><i class="fas fa-calendar-day"></i> ${dia.data || 'Data não disponível'}</span>
+            <small>${dia.dataRaw || ''}</small>
+          </div>
+        `;
         
-        function carregarSemana() {
-            if (carregando) return;
+        if (!dia.aulas || dia.aulas.length === 0) {
+          html += `
+            <div style="text-align:center; padding:15px; color:#999; font-style:italic; background:#f9f9f9; border-radius:5px; margin-bottom:15px">
+              Nenhuma aula neste dia
+            </div>
+          `;
+        } else {
+          dia.aulas.forEach(aula => {
+            let conteudo = aula.conteudoHoje || '...';
+            let tipo = aula.tipoHoje || '';
             
-            mostrarCarregando('Buscando planejamento...');
-            semanaContent.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><br>Carregando planejamento da semana...</div>';
-            
-            // Calcular texto para exibição
-            let semanaTexto = "";
-            if (offsetSemana === 0) {
-                semanaTexto = "Esta Semana";
-            } else if (offsetSemana > 0) {
-                semanaTexto = `Próxima${offsetSemana > 7 ? ` (+${offsetSemana/7})` : ''}`;
-            } else {
-                semanaTexto = `Anterior${offsetSemana < -7 ? ` (${offsetSemana/7})` : ''}`;
-            }
-            displayData.innerText = semanaTexto;
-            
-            const url = `${API_URL}?action=getSemana&offset=${offsetSemana}`;
-            
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Erro HTTP: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(json => {
-                    esconderCarregando();
-                    
-                    if (json.status === "erro") {
-                        mostrarErro(json.message);
-                        return;
-                    }
-                    
-                    if (!json || json.length === 0) {
-                        semanaContent.innerHTML = `
-                            <div class="empty-state">
-                                <i class="fas fa-calendar-week"></i>
-                                <h3>Semana sem aulas</h3>
-                                <p>Não há aulas planejadas para esta semana.</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    let html = '';
-                    
-                    json.forEach(dia => {
-                        html += `
-                            <div style="background:var(--primary); color:white; padding:8px 12px; border-radius:6px; margin:20px 0 10px 0; font-size:0.9rem; display:flex; justify-content:space-between; align-items:center">
-                                <span><i class="fas fa-calendar-day"></i> ${dia.data}</span>
-                                <small>${dia.dataRaw}</small>
-                            </div>
-                        `;
-                        
-                        if (!dia.aulas || dia.aulas.length === 0) {
-                            html += `
-                                <div style="text-align:center; padding:15px; color:#999; font-style:italic; background:#f9f9f9; border-radius:5px; margin-bottom:15px">
-                                    Nenhuma aula neste dia
-                                </div>
-                            `;
-                        } else {
-                            dia.aulas.forEach(aula => {
-                                let conteudo = aula.conteudoHoje || '...';
-                                let tipo = aula.tipoHoje || '';
-                                
-                                html += `
-                                <div class="card" style="margin-top:10px; border-left:4px solid var(--primary)">
-                                    <div class="card-body" style="padding:12px">
-                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
-                                            <b style="font-size:1rem">${aula.turma}</b>
-                                            <small>${aula.inicio} - ${aula.fim}</small>
-                                        </div>
-                                        
-                                        ${renderInfra(aula)}
-                                        
-                                        <div style="margin-top:8px">
-                                            ${tipo === 'PLANEJADO' ? 
-                                                `<div style="background:#e8f5e9; padding:6px 10px; border-radius:4px; font-size:0.85rem">
-                                                    <i class="fas fa-thumbtack" style="color:var(--accent)"></i>
-                                                    <strong>Planejado:</strong> ${conteudo}
-                                                </div>` :
-                                                `<div style="color:#999; font-size:0.85rem; padding:5px">
-                                                    <i>Sem planejamento registrado</i>
-                                                </div>`
-                                            }
-                                        </div>
-                                    </div>
-                                    <button class="btn-action" onclick="abrirModal('${aula.turma.replace(/'/g, "\\'")}', '${dia.dataRaw}', 'PLANEJADO', '${(aula.conteudoHoje || '').replace(/'/g, "\\'")}', '')" style="padding:10px; font-size:0.85rem">
-                                        <i class="fas fa-edit"></i> ${tipo === 'PLANEJADO' ? 'Editar Planejamento' : 'Criar Planejamento'}
-                                    </button>
-                                </div>
-                                `;
-                            });
-                        }
-                    });
-                    
-                    semanaContent.innerHTML = html;
-                })
-                .catch(error => {
-                    esconderCarregando();
-                    mostrarErro(`Falha ao carregar planejamento: ${error.message}`);
-                    console.error('Erro ao carregar semana:', error);
-                });
+            html += `
+            <div class="card" style="margin-top:10px; border-left:4px solid var(--primary)">
+              <div class="card-body" style="padding:12px">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+                  <b style="font-size:1rem">${aula.turma || 'Turma não definida'}</b>
+                  <small>${aula.inicio || ''} - ${aula.fim || ''}</small>
+                </div>
+                
+                ${renderInfra(aula)}
+                
+                <div style="margin-top:8px">
+                  ${tipo === 'PLANEJADO' ? 
+                    `<div style="background:#e8f5e9; padding:6px 10px; border-radius:4px; font-size:0.85rem">
+                      <i class="fas fa-thumbtack" style="color:var(--accent)"></i>
+                      <strong>Planejado:</strong> ${conteudo}
+                    </div>` :
+                    `<div style="color:#999; font-size:0.85rem; padding:5px">
+                      <i>Sem planejamento registrado</i>
+                    </div>`
+                  }
+                </div>
+              </div>
+              <button class="btn-action" onclick="abrirModal('${(aula.turma || '').replace(/'/g, "\\'")}', '${dia.dataRaw || ''}', 'PLANEJADO', '${(aula.conteudoHoje || '').replace(/'/g, "\\'")}', '')" style="padding:10px; font-size:0.85rem">
+                <i class="fas fa-edit"></i> ${tipo === 'PLANEJADO' ? 'Editar Planejamento' : 'Criar Planejamento'}
+              </button>
+            </div>
+            `;
+          });
         }
+      });
+      
+      semanaContent.innerHTML = html;
+    })
+    .catch(error => {
+      esconderCarregando();
+      mostrarErro(`Falha ao carregar planejamento: ${error.message}`);
+      console.error('Erro ao carregar semana:', error);
+    });
+}
 
         // ================= FUNÇÕES DO MODAL =================
         
@@ -989,4 +993,5 @@
     </script>
 </body>
 </html>
+
 
